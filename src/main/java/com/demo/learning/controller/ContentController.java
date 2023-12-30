@@ -1,7 +1,9 @@
 package com.demo.learning.controller;
 
 import com.demo.learning.model.Content;
+import com.demo.learning.model.Status;
 import com.demo.learning.repository.ContentCollectionRepository;
+import com.demo.learning.repository.ContentRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +15,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/content")
 public class ContentController {
-    private final ContentCollectionRepository contentCollectionRepository;
+    //private final ContentCollectionRepository contentCollectionRepository;
+    private final ContentRepository contentCollectionRepository;
     @Autowired // it's the same thing if we have only one consturctor, add this annotation when we have multiple constructors
-    public ContentController(ContentCollectionRepository contentCollectionRepository){
+    public ContentController(ContentRepository contentCollectionRepository){
         this.contentCollectionRepository = contentCollectionRepository;
     }
     @GetMapping("") /// means path is /api/content
@@ -46,7 +49,15 @@ public class ContentController {
         if(!contentCollectionRepository.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Content not found!");// better create ContentNotFound exception
         }
-        contentCollectionRepository.delete(id);
+        contentCollectionRepository.deleteById(id);
+    }
+    @GetMapping("/filter/{keyword}")
+    public List<Content> findByTitle(@PathVariable String keyword){
+        return contentCollectionRepository.findAllByTitleContains(keyword);
+    }
+    @GetMapping("/filter/status/{status}")
+    public List<Content> findbyStatus(@PathVariable Status status){
+        return contentCollectionRepository.listByStatus(status);
     }
 
 }

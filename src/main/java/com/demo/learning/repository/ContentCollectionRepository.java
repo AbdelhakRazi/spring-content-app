@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ContentCollectionRepository {
+public class ContentCollectionRepository{
     private final List<Content> contentList = new ArrayList<>();
     public ContentCollectionRepository(){
 
